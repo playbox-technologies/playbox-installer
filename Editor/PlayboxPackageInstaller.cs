@@ -203,6 +203,7 @@ public class PackageInstaller
         File.WriteAllText(ManifestPath, manifestJson.ToString(Newtonsoft.Json.Formatting.Indented));
 
         AssetDatabase.Refresh();
+		Client.Resolve();
     }
 
     static JArray AddToRegistry(JArray registries,string name, string url, JArray scopes)
