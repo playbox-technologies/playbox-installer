@@ -93,7 +93,7 @@ public class PackageInstaller
             return;
         }
 
-        var request = Client.Add("https://github.com/dreamsim-dev/PlayboxSdk.git#main");
+        var request = Client.Add("https://github.com/playbox-technologies/playbox-installer.git#main");
         
         EditorApplication.update += Update;
 
