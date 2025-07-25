@@ -18,29 +18,17 @@ public class PackageInstaller
     private static string facebook_url = "https://lookaside.facebook.com/developers/resources/?id=FacebookSDK-current.zip";
     private static string firebase_url = "https://firebase.google.com/download/unity?hl=ru";
     
-    [MenuItem("PlayboxInstaller/Install Playbox Dependencies")]
+    [MenuItem("PlayboxInstaller/Stage 1: Install Playbox Dependencies")]
     public static void InstallPlayboxDependencies()
     {
         AddPackagesToManifest();
     }
     
-    [MenuItem("PlayboxInstaller/Download important dependencies")]
+    [MenuItem("PlayboxInstaller/Stage 2: Download important dependencies")]
     public static async void DownloadFacebook()
     {
         await DownloadFileAsync(facebook_url,Path.Combine(Application.dataPath,"../DownloadFiles/FacebookSDK.zip"));
         await DownloadFileAsync(firebase_url,Path.Combine(Application.dataPath,"../DownloadFiles/Firebase.zip"));
-    }
-    
-    [MenuItem("PlayboxInstaller/Fix Facebook Error")]
-    public static  void FixFacebookError()
-    {
-        AssetDatabase.Refresh();
-        AssetDatabase.ImportAsset("Assets", ImportAssetOptions.ImportRecursive);
-        AssetDatabase.Refresh();
-        
-        Client.Resolve();
-
-        EditorUtility.DisplayDialog("Reimport", "Reimport completed.", "OK");
     }
     
     public static async Task<bool> DownloadFileAsync(string url, string outputPath)
@@ -76,7 +64,7 @@ public class PackageInstaller
         }
     }
 
-    [MenuItem("PlayboxInstaller/Install PlayboxSDK")]
+    [MenuItem("PlayboxInstaller/Stage 3: Install PlayboxSDK")]
     public static void InstallPlayboxSDK()
     {
         if (!IsFirebaseAvailable())
@@ -112,6 +100,18 @@ public class PackageInstaller
                 EditorApplication.update -= Update;
             }
         }
+    }
+
+[MenuItem("PlayboxInstaller/Fix Facebook Error")]
+    public static  void FixFacebookError()
+    {
+        AssetDatabase.Refresh();
+        AssetDatabase.ImportAsset("Assets", ImportAssetOptions.ImportRecursive);
+        AssetDatabase.Refresh();
+        
+        Client.Resolve();
+
+        EditorUtility.DisplayDialog("Reimport", "Reimport completed.", "OK");
     }
 
     [MenuItem("PlayboxInstaller/Upgrade PlayboxSDK")]
