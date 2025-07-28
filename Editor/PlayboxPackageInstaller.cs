@@ -17,7 +17,7 @@ public class PackageInstaller
     
     private static string facebook_url = "https://lookaside.facebook.com/developers/resources/?id=FacebookSDK-current.zip";
     private static string firebase_url = "https://firebase.google.com/download/unity?hl=ru";
-    private static string playbox_url = "https://github.com/playbox-technologies/playbox-installer.git#";
+    private static string playbox_url = "https://github.com/playbox-technologies/playbox-sdk.git#";
     private static string playbox_branch = "main";
     
     [MenuItem("PlayboxInstaller/Stage 1: Install Playbox Dependencies")]
