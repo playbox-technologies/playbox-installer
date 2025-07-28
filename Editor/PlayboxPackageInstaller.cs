@@ -195,7 +195,7 @@ public class PackageInstaller
             registries = AddToRegistry(registries,
                 "package.openupm.com",
                 "https://package.openupm.com",
-                new JArray("com.google.external-dependency-manager"));
+                new JArray("com.google"));
         }
 
 
