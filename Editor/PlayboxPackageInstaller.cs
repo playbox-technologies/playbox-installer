@@ -29,7 +29,6 @@ public class PackageInstaller
     [MenuItem("PlayboxInstaller/Stage 2: Download important dependencies")]
     public static async void DownloadFacebook()
     {
-        await DownloadFileAsync(facebook_url,Path.Combine(Application.dataPath,"../DownloadFiles/FacebookSDK.zip"));
         await DownloadFileAsync(firebase_url,Path.Combine(Application.dataPath,"../DownloadFiles/Firebase.zip"));
     }
     
@@ -102,18 +101,6 @@ public class PackageInstaller
                 EditorApplication.update -= Update;
             }
         }
-    }
-
-[MenuItem("PlayboxInstaller/Fix Facebook Error")]
-    public static  void FixFacebookError()
-    {
-        AssetDatabase.Refresh();
-        AssetDatabase.ImportAsset("Assets", ImportAssetOptions.ImportRecursive);
-        AssetDatabase.Refresh();
-        
-        Client.Resolve();
-
-        EditorUtility.DisplayDialog("Reimport", "Reimport completed.", "OK");
     }
 
     [MenuItem("PlayboxInstaller/Upgrade PlayboxSDK")]
