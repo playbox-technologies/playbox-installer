@@ -30,7 +30,9 @@ public class PackageInstaller
     [MenuItem("PlayboxInstaller/Stage 2: Download important dependencies")]
     public static async void DownloadFacebook()
     {
-        await DownloadFileAsync(firebase_url,Path.Combine(Application.dataPath,"../DownloadFiles/Firebase.zip"));
+        var output = Path.Combine(Application.dataPath, "../DownloadFiles/Firebase.zip");
+        
+        await DownloadFileAsync(firebase_url,output);
     }
     
     public static async Task<bool> DownloadFileAsync(string url, string outputPath)
