@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
+using Codice.Client.Common.EventTracking;
 using Newtonsoft.Json.Linq;
 using UnityEditor.PackageManager;
 using UnityEngine.Networking;
@@ -15,7 +17,6 @@ public class PackageInstaller
 {
     private static string ManifestPath => Path.Combine(Application.dataPath, "../Packages/manifest.json");
     
-    private static string facebook_url = "https://lookaside.facebook.com/developers/resources/?id=FacebookSDK-current.zip";
     private static string firebase_url = "https://firebase.google.com/download/unity?hl=ru";
     private static string playbox_url = "https://github.com/playbox-technologies/playbox-sdk.git#";
     private static string playbox_branch = "main";
