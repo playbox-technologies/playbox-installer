@@ -13,6 +13,8 @@ namespace Editor.PlayboxInstaller
     {
         private static string ManifestPath => Path.Combine(Application.dataPath, "../Packages/manifest.json");
         
+        private JObject deps;
+        
         private Dictionary<string, string> packagesToAdd = new ()
         {
             { "com.appsflyer.unity", "https://github.com/AppsFlyerSDK/appsflyer-unity-plugin.git#upm" },
@@ -31,21 +33,60 @@ namespace Editor.PlayboxInstaller
         public override void Initialize(EditorWindow window)
         {
             base.Initialize(window);
-            
-            
+
+            deps = GetDependencies();
         }
 
         public override void OnGUI()
         {
             base.OnGUI();
 
+            int nextStage = 0;
+
+            GUILayout.Space(5);
+            
             GUILayout.Label("Install Dependenties");
+            
+            GUILayout.Space(10);
+
+            GUILayout.BeginVertical();
+            
+            foreach (var item in packagesToAdd)
+            {
+                GUILayout.BeginHorizontal();
+                
+                if (deps != null && deps[item.Key] == null)
+                {
+                    GUILayout.Label($"📦❌ {item.Key}");
+                    GUILayout.Label("not installed",GUILayout.ExpandWidth(false));
+                }
+                else
+                {
+                    GUILayout.Label($"📦✅ {item.Key}");
+                    GUILayout.Label("installed",GUILayout.ExpandWidth(false));
+                    
+                    nextStage++;
+                }
+                
+                GUILayout.EndHorizontal();
+                
+                GUILayout.Space(2);
+            }
+            
+            GUILayout.EndVertical();
+            
+            GUILayout.Space(10);
+
+            isEnableNextStage = nextStage >= packagesToAdd.Count;
+
+            GUI.enabled = !isEnableNextStage;
             
             if (GUILayout.Button("Install Dependencies"))
             {
                 AddPackagesToManifest();
-                isEnableNextStage = true;
             }
+            
+            GUI.enabled = true;
         }
 
         private JObject GetDependencies()

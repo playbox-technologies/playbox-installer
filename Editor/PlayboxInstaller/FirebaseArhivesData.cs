@@ -109,7 +109,7 @@ namespace Editor.PlayboxInstaller
             isImporting = true;
             var path = packageQueue.Dequeue();
             Debug.Log($"📦 Importing: {path}");
-            AssetDatabase.ImportPackage(path, true); // показываем окно импорта
+            AssetDatabase.ImportPackage(path, false); // показываем окно импорта
         }
     }
 }

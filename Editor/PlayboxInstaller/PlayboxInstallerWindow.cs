@@ -18,7 +18,10 @@ namespace Editor.PlayboxInstaller
             GetWindow<PlayboxInstallerWindow>("Arhives Window");
         }
 
-        private StageWindowContext CurrentStage() => m_StageWindowContexts[m_SelectedStageIndex];
+        private StageWindowContext CurrentStage()
+        {
+            return m_StageWindowContexts[Mathf.Clamp(m_SelectedStageIndex, 0, m_StageWindowContexts.Count)];
+        }
 
         private void CreateGUI()
         {
@@ -43,6 +46,8 @@ namespace Editor.PlayboxInstaller
             {
                 m_SelectedStageIndex++;
                 m_SelectedStageIndex = Mathf.Clamp(m_SelectedStageIndex, 0, m_StageWindowContexts.Count - 1);
+                
+                stage = CurrentStage();
                 
                 stage.Initialize(this);
             }
