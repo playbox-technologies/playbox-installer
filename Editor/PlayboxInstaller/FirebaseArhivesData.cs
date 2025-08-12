@@ -5,7 +5,7 @@ using System.IO.Compression;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor.PlayboxInstaller
+namespace PlayboxInstaller
 {
     public static class FirebaseArhivesData
     {
@@ -22,10 +22,28 @@ namespace Editor.PlayboxInstaller
         {
             var path = Path.Combine(Application.dataPath, "../DownloadFiles/Firebase.zip");
             var extactFolder = Path.Combine(Application.dataPath, "../DownloadFiles/");
+            List<UnityPackageData> packageEntries = new();
             
-            using (ZipArchive archive = new ZipArchive(File.OpenRead(path), ZipArchiveMode.Read))
+            if (!Directory.Exists(extactFolder))
+                return packageEntries;
+
+            if (!File.Exists(path))
             {
-                List<UnityPackageData> packageEntries = new();
+                return packageEntries;
+            }
+            else
+            {
+                FileInfo fileInfo = new FileInfo(path);
+                long sizeInBytes = fileInfo.Length;
+                float sizeInMB = sizeInBytes / (1024f * 1024f);
+                
+                if(sizeInMB < 1000)
+                    return packageEntries;
+            }
+
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (ZipArchive archive = new ZipArchive(fs, ZipArchiveMode.Read))
+            {
                 string packageEnds = ".unitypackage";
             
                 foreach (var entry in archive.Entries)

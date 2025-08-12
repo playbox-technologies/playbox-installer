@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Editor.PlayboxInstaller.Stages;
 
-namespace Editor.PlayboxInstaller
+namespace PlayboxInstaller
 {
     public class InstallFirebaseStage : StageWindowContext
     {
@@ -47,6 +46,8 @@ namespace Editor.PlayboxInstaller
             if (GUILayout.Button("Install Arhives")) 
             {
                 FirebaseArhivesData.InstallArhives(unityPackages);
+                
+                isEnableNextStage = true;
             }
 
             GUILayout.EndVertical();

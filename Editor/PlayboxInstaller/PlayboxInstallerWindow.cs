@@ -3,9 +3,8 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Editor.PlayboxInstaller.Stages;
 
-namespace Editor.PlayboxInstaller
+namespace PlayboxInstaller
 {
     public class PlayboxInstallerWindow : EditorWindow
     {
@@ -20,14 +19,17 @@ namespace Editor.PlayboxInstaller
 
         private StageWindowContext CurrentStage()
         {
-            return m_StageWindowContexts[Mathf.Clamp(m_SelectedStageIndex, 0, m_StageWindowContexts.Count)];
+            return m_StageWindowContexts[Mathf.Clamp(m_SelectedStageIndex, 0, m_StageWindowContexts.Count - 1)];
         }
 
         private void CreateGUI()
         {
+            m_StageWindowContexts.Clear();
+
             m_StageWindowContexts.Add(new InstallDependentiesStage());
             m_StageWindowContexts.Add(new DownloadPackagesStage());
             m_StageWindowContexts.Add(new InstallFirebaseStage());
+            m_StageWindowContexts.Add(new InstallPlayboxStage());
 
             CurrentStage().Initialize(this);
         }
@@ -35,23 +37,22 @@ namespace Editor.PlayboxInstaller
         private void OnGUI()
         {
             var stage = CurrentStage();
-            
-            m_SelectedStageIndex = Mathf.Clamp(m_SelectedStageIndex, 0, m_StageWindowContexts.Count - 1);
-            
+
             stage.OnGUI();
 
             GUI.enabled = stage.IsEnableNextStage();
 
-            if (GUILayout.Button("Next Stage"))
-            {
-                m_SelectedStageIndex++;
-                m_SelectedStageIndex = Mathf.Clamp(m_SelectedStageIndex, 0, m_StageWindowContexts.Count - 1);
-                
-                stage = CurrentStage();
-                
-                stage.Initialize(this);
-            }
-            
+            if (!(m_SelectedStageIndex >= m_StageWindowContexts.Count - 1))
+                if (GUILayout.Button(stage.nextStageButtonName))
+                {
+                    m_SelectedStageIndex++;
+                    m_SelectedStageIndex = Mathf.Clamp(m_SelectedStageIndex, 0, m_StageWindowContexts.Count - 1);
+
+                    stage = CurrentStage();
+
+                    stage.Initialize(this);
+                }
+
             GUI.enabled = true;
         }
     }

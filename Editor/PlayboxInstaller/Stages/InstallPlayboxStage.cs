@@ -1,19 +1,21 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace PlayboxInstaller
 {
-    public class InstallDependentiesStage : StageWindowContext
+    public class InstallPlayboxStage : StageWindowContext
     {
-        private static string ManifestPath => Path.Combine(Application.dataPath, "../Packages/manifest.json");
+        private const string PlayboxPackageName = "";
+        private const string playbox_url = "https://github.com/playbox-technologies/playbox-sdk.git#";
+        private const string playbox_branch = "main";
         
         private JObject deps;
         
-        private static readonly Dictionary<string, string> packagesToAdd = new ()
+        private Dictionary<string, string> packagesToAdd = new ()
         {
             { "com.appsflyer.unity", "https://github.com/AppsFlyerSDK/appsflyer-unity-plugin.git#upm" },
             {
@@ -31,58 +33,77 @@ namespace PlayboxInstaller
         public override void Initialize(EditorWindow window)
         {
             base.Initialize(window);
-
+            
             deps = ManifestData.GetDependencies();
         }
 
         public override void OnGUI()
         {
             base.OnGUI();
-
-            int NextStageIndex = 0;
-
+            
             GUILayout.Space(5);
-            
+
             GUILayout.Label("Install Dependenties");
-            
+
             GUILayout.Space(10);
 
             GUILayout.BeginVertical();
             
             foreach (var item in packagesToAdd)
             {
-                string packageName = item.Key;
-                bool hasPackageExist = deps.PackageExists(packageName);
-                string packageNameLabel = hasPackageExist ? $"📦✅ {item.Key}" : $"📦❌ {packageName}";
-                string installedLabel = $"{(hasPackageExist ? "": "not")} installed";
-                
-                NextStageIndex += hasPackageExist ? 1 : 0;
-                
                 GUILayout.BeginHorizontal();
                 
-                GUILayout.Label(packageNameLabel);
-                GUILayout.Label(installedLabel,GUILayout.ExpandWidth(false));
+                if (deps != null && deps[item.Key] == null)
+                {
+                    GUILayout.Label($"📦❌ {item.Key}");
+                    GUILayout.Label("not installed",GUILayout.ExpandWidth(false));
+                }
+                else
+                {
+                    GUILayout.Label($"📦✅ {item.Key}");
+                    GUILayout.Label("installed",GUILayout.ExpandWidth(false));
+                }
                 
                 GUILayout.EndHorizontal();
                 
                 GUILayout.Space(2);
             }
             
-            GUILayout.EndVertical();
+            GUILayout.Space(2);
             
+            GUILayout.EndVertical();
+
             GUILayout.Space(10);
 
-            isEnableNextStage = NextStageIndex >= packagesToAdd.Count;
-
             GUI.enabled = !isEnableNextStage;
-            
-            if (GUILayout.Button("Install Dependencies"))
+
+            if (GUILayout.Button("Install Playbox"))
             {
-                ManifestData.AddPackagesToManifest(packagesToAdd);
+                var request = Client.Add($"{playbox_url}{playbox_branch}");
+
+                EditorApplication.update += Update;
+
+                void Update()
+                {
+                    if (request.IsCompleted)
+                    {
+                        if (request.Status == StatusCode.Success)
+                        {
+                            Debug.Log("Playbox SDK Installed");
+                        }
+                        else if (request.Status == StatusCode.Failure)
+                        {
+                            Debug.Log("Playbox SDK Installation failed");
+                        }
+
+                        EditorApplication.update -= Update;
+                    }
+                }
             }
-            
+
             GUI.enabled = true;
         }
     }
 }
+
 #endif

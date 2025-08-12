@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-namespace Editor.PlayboxInstaller
+namespace PlayboxInstaller
 {
     public class UnityPackageData
     {

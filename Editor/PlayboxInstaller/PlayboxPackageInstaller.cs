@@ -1,13 +1,10 @@
 #if UNITY_EDITOR
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using System.IO.Compression;
 using System.Threading.Tasks;
-using Codice.Client.Common.EventTracking;
 using Newtonsoft.Json.Linq;
 using UnityEditor.PackageManager;
 using UnityEngine.Networking;
@@ -21,13 +18,13 @@ public class PackageInstaller
     private static string playbox_url = "https://github.com/playbox-technologies/playbox-sdk.git#";
     private static string playbox_branch = "main";
     
-    [MenuItem("PlayboxInstaller/Stage 1: Install Playbox Dependencies")]
+    //[MenuItem("PlayboxInstaller/Stage 1: Install Playbox Dependencies")]
     public static void InstallPlayboxDependencies()
     {
         AddPackagesToManifest();
     }
     
-    [MenuItem("PlayboxInstaller/Stage 2: Download important dependencies")]
+    //[MenuItem("PlayboxInstaller/Stage 2: Download important dependencies")]
     public static async void DownloadFacebook()
     {
         var output = Path.Combine(Application.dataPath, "../DownloadFiles/Firebase.zip");
@@ -68,7 +65,7 @@ public class PackageInstaller
         }
     }
 
-    [MenuItem("PlayboxInstaller/Stage 3: Install PlayboxSDK")]
+    //[MenuItem("PlayboxInstaller/Stage 3: Install PlayboxSDK")]
     public static void InstallPlayboxSDK()
     {
         if (!IsFirebaseAvailable())

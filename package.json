@@ -2,7 +2,7 @@
   "name": "playbox-installer",
   "displayName": "Playbox-Installer",
   "author": "playbox",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Playbox Base Installer",
   "keywords": [
     "utility",
