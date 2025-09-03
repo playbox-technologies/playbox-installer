@@ -60,7 +60,6 @@ namespace PlayboxInstaller
                 
                 return packageEntries;
             }
-        
         }
 
         public static void InstallArhives(List<UnityPackageData> unityPackages)
@@ -116,8 +115,7 @@ namespace PlayboxInstaller
             {
                 Debug.Log("✅ All packages imported.");
                 isImporting = false;
-
-                // Отписка
+                
                 AssetDatabase.importPackageCompleted -= OnPackageImportCompleted;
                 AssetDatabase.importPackageCancelled -= OnPackageImportCancelled;
 
@@ -127,7 +125,7 @@ namespace PlayboxInstaller
             isImporting = true;
             var path = packageQueue.Dequeue();
             Debug.Log($"📦 Importing: {path}");
-            AssetDatabase.ImportPackage(path, false); // показываем окно импорта
+            AssetDatabase.ImportPackage(path, false); 
         }
     }
 }

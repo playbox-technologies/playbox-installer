@@ -14,7 +14,7 @@ namespace PlayboxInstaller
         [MenuItem("PlayboxInstaller/Open Installer Window")]
         private static void UnpackArhivesMenu()
         {
-            GetWindow<PlayboxInstallerWindow>("Arhives Window");
+            GetWindow<PlayboxInstallerWindow>("Playbox Installer Window");
         }
 
         private StageWindowContext CurrentStage()
