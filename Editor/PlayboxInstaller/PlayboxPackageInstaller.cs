@@ -137,7 +137,7 @@ public class PackageInstaller
         
         var packagesToAdd = new Dictionary<string, string>
         {
-            { "com.appsflyer.unity","https://github.com/AppsFlyerSDK/appsflyer-unity-plugin.git#upm" },
+            { "appsflyer-unity-plugin","https://github.com/AppsFlyerSDK/appsflyer-unity-plugin.git#upm" },
             {  "com.playbox.facebooksdk", "https://github.com/playbox-technologies/playbox-dependenties.git?path=facebook-sdk#main"},
             { "com.devtodev.sdk.analytics","https://github.com/devtodev-analytics/package_Analytics.git" },
             { "com.devtodev.sdk.analytics.google","https://github.com/devtodev-analytics/package_Google.git" },
