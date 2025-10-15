@@ -17,7 +17,7 @@ namespace PlayboxInstaller
         
         private Dictionary<string, string> packagesToAdd = new ()
         {
-            { "com.appsflyer.unity", "https://github.com/AppsFlyerSDK/appsflyer-unity-plugin.git#upm" },
+            { "appsflyer-unity-plugin", "https://github.com/AppsFlyerSDK/appsflyer-unity-plugin.git#upm" },
             {
                 "com.playbox.facebooksdk",
                 "https://github.com/playbox-technologies/playbox-dependenties.git?path=facebook-sdk#main"
