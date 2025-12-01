@@ -16,14 +16,14 @@ public class FacebookPackageLoader : StageWindowContext
     private bool _isDownloading;
     private bool _isDownloadingCanceled;
         
-    private UnityPackageData _packagesData = new();
+    private List<UnityPackageData> _packagesData = new();
 
     private string outputPath = Path.Combine(Application.dataPath, "../DownloadFiles/Facebook.zip");
         
     public override void Initialize(EditorWindow window, string stageName)
     {
         base.Initialize(window, stageName);
-            
+        _packagesData = FacebookArhivesData.UnpackArhives();
     }
 
     public override void OnGUI()
@@ -65,6 +65,7 @@ public class FacebookPackageLoader : StageWindowContext
                 _isDownloadingCanceled = true;
                     
                 _abortRequest?.Abort();
+                _packagesData = FacebookArhivesData.UnpackArhives();
             }
         }
         else
@@ -75,6 +76,7 @@ public class FacebookPackageLoader : StageWindowContext
 
                 _isDownloading = true;
                 _isDownloadingCanceled = false;
+                _packagesData = FacebookArhivesData.UnpackArhives();
             }
         }
             
@@ -110,6 +112,7 @@ public class FacebookPackageLoader : StageWindowContext
             _isDone = webRequestOperation.isDone && _progress >= 0.9f;
             _isDownloading = false;
             _progress = 0;
+            _packagesData = FacebookArhivesData.UnpackArhives();
         }
     }
 }

@@ -31,15 +31,6 @@ namespace PlayboxInstaller
             {
                 return packageEntries;
             }
-            else
-            {
-                FileInfo fileInfo = new FileInfo(path);
-                long sizeInBytes = fileInfo.Length;
-                float sizeInMB = sizeInBytes / (1024f * 1024f);
-                
-                if(sizeInMB < 1000)
-                    return packageEntries;
-            }
 
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (ZipArchive archive = new ZipArchive(fs, ZipArchiveMode.Read))

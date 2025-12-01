@@ -48,6 +48,8 @@ namespace PlayboxInstaller
             
                 foreach (var entry in archive.Entries)
                 {
+                    Debug.Log(entry.FullName);
+                    
                     if (entry.FullName.EndsWith(packageEnds))
                     {
                         packageEntries.Add(new UnityPackageData

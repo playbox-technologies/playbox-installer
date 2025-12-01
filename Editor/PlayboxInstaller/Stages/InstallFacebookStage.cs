@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+
+using System.Collections.Generic;
 using PlayboxInstaller;
 using UnityEditor;
 using UnityEngine;
-
-#if UNITY_EDITOR
 
 public class InstallFacebookStage : StageWindowContext
 {
@@ -14,8 +14,7 @@ public class InstallFacebookStage : StageWindowContext
         base.Initialize(window, stageName);
         unityPackages = FacebookArhivesData.UnpackArhives();
     }
-
-
+    
     public override void OnGUI()
     {
         base.OnGUI();
