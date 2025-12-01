@@ -29,6 +29,8 @@ namespace PlayboxInstaller
             m_StageWindowContexts.Add(new InstallDependentiesStage());
             m_StageWindowContexts.Add(new DownloadPackagesStage());
             m_StageWindowContexts.Add(new InstallFirebaseStage());
+            m_StageWindowContexts.Add(new FacebookPackageLoader());
+            m_StageWindowContexts.Add(new InstallFacebookStage());
             m_StageWindowContexts.Add(new InstallPlayboxStage());
 
             CurrentStage().Initialize(this, m_StageWindowContexts[0].GetType().Name);
