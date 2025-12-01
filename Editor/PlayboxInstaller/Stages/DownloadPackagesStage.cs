@@ -20,12 +20,13 @@ namespace PlayboxInstaller
         private List<UnityPackageData> _packagesData = new();
 
         private string outputPath = Path.Combine(Application.dataPath, "../DownloadFiles/Firebase.zip");
-
-        public override void Initialize(EditorWindow window)
+        
+        public override void Initialize(EditorWindow window, string stageName)
         {
-            base.Initialize(window);
+            base.Initialize(window, stageName);
 
             _packagesData = FirebaseArhivesData.UnpackArhives();
+            
         }
 
         public override void OnGUI()

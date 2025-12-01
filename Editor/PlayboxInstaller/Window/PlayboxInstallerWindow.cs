@@ -31,7 +31,7 @@ namespace PlayboxInstaller
             m_StageWindowContexts.Add(new InstallFirebaseStage());
             m_StageWindowContexts.Add(new InstallPlayboxStage());
 
-            CurrentStage().Initialize(this);
+            CurrentStage().Initialize(this, m_StageWindowContexts[0].GetType().Name);
         }
 
         private void OnGUI()
@@ -50,7 +50,7 @@ namespace PlayboxInstaller
 
                     stage = CurrentStage();
 
-                    stage.Initialize(this);
+                    stage.Initialize(this, stage.GetType().Name);
                 }
 
             GUI.enabled = true;

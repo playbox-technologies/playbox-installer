@@ -26,9 +26,9 @@ namespace PlayboxInstaller
             { "com.unity.ads.ios-support", "1.0.0" }
         };
 
-        public override void Initialize(EditorWindow window)
+        public override void Initialize(EditorWindow window, string stageName)
         {
-            base.Initialize(window);
+            base.Initialize(window, stageName);
             
             deps = ManifestData.GetDependencies();
         }
