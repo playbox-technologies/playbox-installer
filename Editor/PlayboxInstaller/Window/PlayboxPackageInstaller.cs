@@ -18,13 +18,11 @@ public class PackageInstaller
     private static string playbox_url = "https://github.com/playbox-technologies/playbox-sdk.git#";
     private static string playbox_branch = "main";
     
-    //[MenuItem("PlayboxInstaller/Stage 1: Install Playbox Dependencies")]
     public static void InstallPlayboxDependencies()
     {
         AddPackagesToManifest();
     }
     
-    //[MenuItem("PlayboxInstaller/Stage 2: Download important dependencies")]
     public static async void DownloadFacebook()
     {
         var output = Path.Combine(Application.dataPath, "../DownloadFiles/Firebase.zip");
@@ -138,14 +136,13 @@ public class PackageInstaller
         var packagesToAdd = new Dictionary<string, string>
         {
             { "appsflyer-unity-plugin","https://github.com/AppsFlyerSDK/appsflyer-unity-plugin.git#upm" },
-            {  "com.playbox.facebooksdk", "https://github.com/playbox-technologies/playbox-dependenties.git?path=facebook-sdk#main"},
+            //{  "com.playbox.facebooksdk", "https://github.com/playbox-technologies/playbox-dependenties.git?path=facebook-sdk#main"},
             { "com.devtodev.sdk.analytics","https://github.com/devtodev-analytics/package_Analytics.git" },
             { "com.devtodev.sdk.analytics.google","https://github.com/devtodev-analytics/package_Google.git" },
             { "com.google.external-dependency-manager","1.2.186" },
             { "com.applovin.mediation.ads","8.3.1" },
             { "com.google.ads.mobile","10.3.0" },
             { "com.unity.ads.ios-support", "1.0.0" }
-            //{ "playbox", "https://github.com/dreamsim-dev/PlayboxSdk.git#main" }
         };
 
         foreach (var item in packagesToAdd)
