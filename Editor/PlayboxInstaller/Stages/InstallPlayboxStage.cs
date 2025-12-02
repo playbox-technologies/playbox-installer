@@ -79,6 +79,8 @@ namespace PlayboxInstaller
 
                 EditorApplication.update += Update;
 
+                EnableNextStage();
+                
                 void Update()
                 {
                     if (request.IsCompleted)
