@@ -30,6 +30,14 @@ namespace PlayboxInstaller
             if (!File.Exists(path))
             {
                 return packageEntries;
+            }else
+            {
+                FileInfo fileInfo = new FileInfo(path);
+                long sizeInBytes = fileInfo.Length;
+                float sizeInMB = sizeInBytes / (1024f * 1024f);
+                
+                if(sizeInMB < 2)
+                    return packageEntries;
             }
 
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
