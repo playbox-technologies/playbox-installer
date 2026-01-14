@@ -72,7 +72,6 @@ namespace PlayboxInstaller
             using (ZipArchive archive = new ZipArchive(File.OpenRead(path), ZipArchiveMode.Read))
             {
                 List<string> extractingPackagesPaths = new();
-                string packageEnds = ".unitypackage";
 
                 foreach (var item in unityPackages)
                 {
