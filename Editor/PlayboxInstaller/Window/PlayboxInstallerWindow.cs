@@ -11,7 +11,7 @@ namespace PlayboxInstaller
         private readonly List<StageWindowContext> m_StageWindowContexts = new();
         private int m_SelectedStageIndex = 0;
 
-        [MenuItem("PlayboxInstaller/Open Installer Window")]
+        [MenuItem("Playbox/Installer/Open Installer Window")]
         private static void UnpackArhivesMenu()
         {
             GetWindow<PlayboxInstallerWindow>("Playbox Installer Window");
