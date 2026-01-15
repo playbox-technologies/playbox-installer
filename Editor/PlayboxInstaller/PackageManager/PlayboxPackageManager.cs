@@ -29,16 +29,16 @@ namespace Editor.PlayboxInstaller.PackageManager
             
             playbox_actual_version = playboxVersion;
 
-            var dependenties = ManifestData.GetDependencies();
-
-            playbox_current_version = (string)dependenties["playbox"];
+            string packageVersion = LockedRepositoryHelper.GetDependencyVersion("playbox");
+            
+            playbox_current_version = packageVersion;
         }
 
         private void OnGUI()
         {
             PlayboxLayout.HorizontalLayout(() =>
             {
-                GUILayout.Label("Install Playbox Builder");
+                GUILayout.Label("Install Playbox");
                 
                 GUILayout.Label("Actual version");
                 GUILayout.Label(playbox_actual_version);
@@ -46,7 +46,7 @@ namespace Editor.PlayboxInstaller.PackageManager
                 
                 if (GUILayout.Button("Install"))
                 {
-                    Debug.Log("Installing Playbox Builder");
+                    Debug.Log("Installing Playbox");
                 }
             });
         }
