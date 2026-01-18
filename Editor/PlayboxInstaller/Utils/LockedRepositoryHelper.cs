@@ -16,7 +16,10 @@ namespace PlayboxInstaller
             var dependencies = json["dependencies"];
             
             Debug.Log(dependencies?.ToString());
-            var package = dependencies?["packageName"];
+            
+            var package = (JObject)dependencies?[packageName];
+            
+            Debug.Log(package?.ToString());
             
             var version = package?["version"];
             
@@ -24,6 +27,11 @@ namespace PlayboxInstaller
             
             if (string.IsNullOrEmpty(packageVersion))
                 packageVersion = "not installed";
+
+            if (package["source"]?.ToString() == "git")
+            {
+                Debug.Log("Is is git");
+            }
 
             return packageVersion;
         }

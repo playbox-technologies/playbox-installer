@@ -31,6 +31,8 @@ namespace Editor.PlayboxInstaller.PackageManager
 
             string packageVersion = LockedRepositoryHelper.GetDependencyVersion("playbox");
             
+            Debug.Log(packageVersion);
+            
             playbox_current_version = packageVersion;
         }
 
