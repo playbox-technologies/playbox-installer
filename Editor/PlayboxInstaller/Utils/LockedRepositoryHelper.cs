@@ -1,16 +1,43 @@
 ﻿#if UNITY_EDITOR
+using System;
 using System.IO;
 using Unity.Plastic.Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace PlayboxInstaller
 {
+    [Serializable]
+    public class PlayboxRepository
+    {
+        public enum RepositoryType
+        {
+            Registry,
+            Git,
+            Local
+        }
+        
+        public string hash;
+        public string url;
+        public RepositoryType repositoryType;
+
+        public override string ToString()
+        {
+            var json =JsonUtility.ToJson(this);
+            
+            return json;
+        }
+    }
+
     public class LockedRepositoryHelper
     {
         private static string manifestPath => Path.Combine(Application.dataPath, "../Packages/packages-lock.json");
         
-        public static string GetDependencyVersion(string packageName)
+        public static PlayboxRepository GetDependencyVersion(string packageName)
         {
+            PlayboxRepository repository = new PlayboxRepository();
+
+            repository.repositoryType = PlayboxRepository.RepositoryType.Registry;
+            
             JObject json = JObject.Parse(File.ReadAllText(manifestPath));
 
             var dependencies = json["dependencies"];
@@ -28,12 +55,23 @@ namespace PlayboxInstaller
             if (string.IsNullOrEmpty(packageVersion))
                 packageVersion = "not installed";
 
-            if (package["source"]?.ToString() == "git")
+            if (package["source"]?.Value<string>() == "git")
             {
-                Debug.Log("Is is git");
-            }
+                repository.repositoryType = PlayboxRepository.RepositoryType.Git;
+                
+                int tokenIndex = packageVersion.IndexOf("#", StringComparison.Ordinal);
 
-            return packageVersion;
+                if (tokenIndex >= 0)
+                {
+                 
+                    var uri = packageVersion.Substring(0, tokenIndex);
+                    
+                }
+
+                repository.hash = package?["hash"]?.Value<string>();
+            }
+            
+            return repository;
         }
     }
 }

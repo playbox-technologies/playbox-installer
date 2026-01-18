@@ -27,13 +27,13 @@ namespace Editor.PlayboxInstaller.PackageManager
         {
             var playboxVersion =  await GetActualPlayboxVersion();
             
+            Debug.Log(await GetActualPlayboxVersion("44fd2a032091a1931bcc3c8daff60ab039bf3fe7"));
+            
             playbox_actual_version = playboxVersion;
 
-            string packageVersion = LockedRepositoryHelper.GetDependencyVersion("playbox");
-            
-            Debug.Log(packageVersion);
-            
-            playbox_current_version = packageVersion;
+            var packageVersion = LockedRepositoryHelper.GetDependencyVersion("playbox");
+
+            playbox_current_version = await GetActualPlayboxVersion(packageVersion.hash);
         }
 
         private void OnGUI()
@@ -53,10 +53,10 @@ namespace Editor.PlayboxInstaller.PackageManager
             });
         }
 
-        private async Task<string> GetActualPlayboxVersion()
+        private async Task<string> GetActualPlayboxVersion(string target = "refs/heads/main")
         {
             var res = await HttpHelper.GetAsync(
-                "https://raw.githubusercontent.com/playbox-technologies/playbox-sdk/refs/heads/main/package.json");
+                $"https://raw.githubusercontent.com/playbox-technologies/playbox-sdk/{target}/package.json");
 
             var packageJson = JObject.Parse(res.Body);
             
