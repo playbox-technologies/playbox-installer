@@ -8,11 +8,8 @@ using UnityEngine;
 
 namespace Editor.PlayboxInstaller.PackageManager
 {
-    public class PlayboxPackageManager : EditorWindow
+    public partial class PlayboxPackageManager : EditorWindow
     {
-        private string playbox_package_link =
-            "https://raw.githubusercontent.com/playbox-technologies/playbox-sdk/refs/heads/main/package.json";
-
         private string playbox_actual_version = "0.0.1";
         private string playbox_current_version = "0.0.1";
         
@@ -25,15 +22,27 @@ namespace Editor.PlayboxInstaller.PackageManager
 
         private async void CreateGUI()
         {
-            var playboxVersion =  await GetActualPlayboxVersion();
+            GitDependentiesLink playboxAcrualRepo = new GitDependentiesLink();
+            playboxAcrualRepo.isHashedLock = false;
+            playboxAcrualRepo.gitBranch = "main";
+            playboxAcrualRepo.gitProjectName = "playbox-sdk";
+            playboxAcrualRepo.gitOrganization = "playbox-technologies";
+            playboxAcrualRepo.gitFilePath = "package.json";
             
-            Debug.Log(await GetActualPlayboxVersion("44fd2a032091a1931bcc3c8daff60ab039bf3fe7"));
+            var playboxVersion =  await GetActualPlayboxVersion(playboxAcrualRepo.GetRawGitRef());
             
             playbox_actual_version = playboxVersion;
 
             var packageVersion = LockedRepositoryHelper.GetDependencyVersion("playbox");
 
-            playbox_current_version = await GetActualPlayboxVersion(packageVersion.hash);
+            GitDependentiesLink playboxCurrentRepo = new GitDependentiesLink();
+            playboxCurrentRepo.isHashedLock = true;
+            playboxCurrentRepo.gitCommitHash = packageVersion.hash;
+            playboxCurrentRepo.gitProjectName = "playbox-sdk";
+            playboxCurrentRepo.gitOrganization = "playbox-technologies";
+            playboxCurrentRepo.gitFilePath = "package.json";
+            
+            playbox_current_version = await GetActualPlayboxVersion(playboxCurrentRepo.GetRawGitRef());
         }
 
         private void OnGUI()
@@ -44,6 +53,8 @@ namespace Editor.PlayboxInstaller.PackageManager
                 
                 GUILayout.Label("Actual version");
                 GUILayout.Label(playbox_actual_version);
+                
+                GUILayout.Label("Current version");
                 GUILayout.Label(playbox_current_version);
                 
                 if (GUILayout.Button("Install"))
@@ -53,10 +64,10 @@ namespace Editor.PlayboxInstaller.PackageManager
             });
         }
 
-        private async Task<string> GetActualPlayboxVersion(string target = "refs/heads/main")
+        private async Task<string> GetActualPlayboxVersion(string url = "")
         {
             var res = await HttpHelper.GetAsync(
-                $"https://raw.githubusercontent.com/playbox-technologies/playbox-sdk/{target}/package.json");
+                url);
 
             var packageJson = JObject.Parse(res.Body);
             
