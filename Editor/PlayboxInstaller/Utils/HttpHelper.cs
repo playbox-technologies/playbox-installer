@@ -29,6 +29,7 @@ namespace PlayboxInstaller
             ProductInfoHeaderValue product = new ProductInfoHeaderValue("Playbox", "1.0");
             
             _client.DefaultRequestHeaders.UserAgent.Add(product);
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.raw"));
             
         }
 

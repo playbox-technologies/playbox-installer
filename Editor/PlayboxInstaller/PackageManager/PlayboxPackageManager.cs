@@ -1,8 +1,6 @@
 ﻿#if UNITY_EDITOR
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PlayboxInstaller;
@@ -16,7 +14,11 @@ namespace Editor.PlayboxInstaller.PackageManager
         private string playbox_actual_version = "0.0.1";
         private string playbox_current_version = "0.0.1";
 
+        private string _playboxOrganization = "playbox-technologies";
+
         private string publicPackages = "";
+        
+        private List<string> playboxBranches = new();
         
         
         [MenuItem("Playbox/Installer/Package Manager")]
@@ -25,25 +27,27 @@ namespace Editor.PlayboxInstaller.PackageManager
             GetWindow<PlayboxPackageManager>("Playbox Package Manager");
         }
 
-        private async void CreateGUI()
+        private async void UpdateNewVersions()
         {
-            var str = await GetPackageInfo("https://api.github.com/orgs/playbox-technologies/repos?type=public&sort=updated&direction=desc&per_page=100&page=1");
-            
-            var json = JArray.Parse(str);
-
-            foreach (var item in json)
-            {
-                publicPackages += (item?["name"]?.Value<string>()) + $"\t {item?["description"]?.Value<string>()}" + "\n";
-            }
-            
             GitDependentiesLink playboxAcrualRepo = new GitDependentiesLink();
             playboxAcrualRepo.isHashedLock = false;
             playboxAcrualRepo.gitBranch = "main";
             playboxAcrualRepo.gitProjectName = "playbox-sdk";
             playboxAcrualRepo.gitOrganization = "playbox-technologies";
             playboxAcrualRepo.gitFilePath = "package.json";
+
+            Debug.Log(playboxAcrualRepo.GetBranchesURL());
             
-            var playboxString =  await GetPackageInfo(playboxAcrualRepo.GetRawGitRef());
+            var branches = await HttpGET(playboxAcrualRepo.GetBranchesURL());
+            
+            var branchesJson = JArray.Parse(branches);
+            
+            foreach (var item in branchesJson)
+            {
+                playboxBranches.Add(item?["name"]?.Value<string>());
+            }
+            
+            var playboxString =  await HttpGET(playboxAcrualRepo.GetRawGitRef());
             
             var packageData = JObject.Parse(playboxString);
             
@@ -61,7 +65,7 @@ namespace Editor.PlayboxInstaller.PackageManager
             playboxCurrentRepo.gitOrganization = "playbox-technologies";
             playboxCurrentRepo.gitFilePath = "package.json";
             
-            var playboxCurrentData = await GetPackageInfo(playboxCurrentRepo.GetRawGitRef());
+            var playboxCurrentData = await HttpGET(playboxCurrentRepo.GetRawGitRef());
             
             var packageCurrentData = JObject.Parse(playboxCurrentData);
             
@@ -72,6 +76,16 @@ namespace Editor.PlayboxInstaller.PackageManager
         {
             PlayboxLayout.HorizontalLayout(() =>
             {
+                if (GUILayout.Button("Update New Versions"))
+                {
+                    UpdateNewVersions();
+                    
+                    Debug.Log("Load Data");
+                }
+            });
+            
+            PlayboxLayout.HorizontalLayout(() =>
+            {
                 GUILayout.Label("Install Playbox");
                 
                 GUILayout.Label("Actual version");
@@ -79,18 +93,23 @@ namespace Editor.PlayboxInstaller.PackageManager
                 
                 GUILayout.Label("Current version");
                 GUILayout.Label(playbox_current_version);
+
+                EditorGUILayout.Popup("", 0,playboxBranches.ToArray());
                 
                 if (GUILayout.Button("Install"))
                 {
                     Debug.Log("Installing Playbox");
                 }
             });
-            
-            GUILayout.Space(20);
-            GUILayout.Label(publicPackages);
+
+            PlayboxLayout.HorizontalLayout(() =>
+            {
+                GUILayout.Space(20);
+                GUILayout.Label(publicPackages);    
+            });
         }
 
-        private async Task<string> GetPackageInfo(string url = "")
+        private static async Task<string> HttpGET(string url = "")
         {
             var res = await HttpHelper.GetAsync(
                 url);

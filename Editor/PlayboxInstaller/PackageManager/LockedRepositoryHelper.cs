@@ -79,6 +79,8 @@ namespace PlayboxInstaller
                 repository.repositoryType = PackageInfo.RepositoryType.Git;
             }
             
+            
+            
             return repository;
         }
 

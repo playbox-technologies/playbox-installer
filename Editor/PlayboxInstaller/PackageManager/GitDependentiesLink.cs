@@ -6,6 +6,7 @@ namespace Editor.PlayboxInstaller.PackageManager
         public class GitDependentiesLink
         {
             public string gitRawRef = "https://raw.githubusercontent.com";
+            public string gitApiRef = "https://api.github.com";
             public string gitProjectName = "";
             public string gitOrganization = "";
             public string gitBranch = "";
@@ -38,6 +39,13 @@ namespace Editor.PlayboxInstaller.PackageManager
                         return $"{gitRawRef}/{gitProjectName}/{gitCommitHash}/refs/heads/{gitBranch}/{gitFilePath}";
                     }
                 }
+            }
+
+            public string GetBranchesURL()
+            {
+                var url = $"{gitApiRef}/repos/{gitOrganization}/{gitProjectName}/branches";
+
+                return url;
             }
         }
     }
