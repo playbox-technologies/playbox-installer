@@ -30,7 +30,27 @@ namespace PlayboxInstaller
 
     public class LockedRepositoryHelper
     {
-        private static string manifestPath => Path.Combine(Application.dataPath, "../Packages/packages-lock.json");
+        private static string LockedFilePath => Path.Combine(Application.dataPath, "../Packages/packages-lock.json");
+        
+        private static JObject _lockedRepositoryJson;
+        private static JObject _dependentiesJson;
+        
+        private static DateTime _lastEditingTime = DateTime.MinValue;
+        private static string _fileData;
+
+        private static string GetLockedFile()
+        {
+            FileInfo fileInfo = new FileInfo(LockedFilePath);
+
+            if (_lastEditingTime < fileInfo.LastWriteTimeUtc)
+            {
+                _lastEditingTime = fileInfo.LastWriteTime;
+                
+                _fileData = File.ReadAllText(LockedFilePath);
+            }
+
+            return _fileData;
+        }
         
         public static PlayboxRepository GetDependencyVersion(string packageName)
         {
@@ -38,13 +58,13 @@ namespace PlayboxInstaller
 
             repository.repositoryType = PlayboxRepository.RepositoryType.Registry;
             
-            JObject json = JObject.Parse(File.ReadAllText(manifestPath));
+            _lockedRepositoryJson = JObject.Parse(GetLockedFile());
 
-            var dependencies = json["dependencies"];
+            _dependentiesJson = (JObject)_lockedRepositoryJson["dependencies"];
             
-            Debug.Log(dependencies?.ToString());
+            Debug.Log(_dependentiesJson?.ToString());
             
-            var package = (JObject)dependencies?[packageName];
+            var package = (JObject)_dependentiesJson?[packageName];
             
             Debug.Log(package?.ToString());
             
