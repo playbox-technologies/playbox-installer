@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PlayboxInstaller;
@@ -23,6 +24,10 @@ namespace Editor.PlayboxInstaller.PackageManager
 
         private async void CreateGUI()
         {
+            var str = await GetPackageInfo("https://api.github.com/orgs/playbox-technologies/repos?type=public&sort=updated&direction=desc&per_page=100&page=1");
+            
+            Debug.Log(str);
+            
             GitDependentiesLink playboxAcrualRepo = new GitDependentiesLink();
             playboxAcrualRepo.isHashedLock = false;
             playboxAcrualRepo.gitBranch = "main";
@@ -30,20 +35,29 @@ namespace Editor.PlayboxInstaller.PackageManager
             playboxAcrualRepo.gitOrganization = "playbox-technologies";
             playboxAcrualRepo.gitFilePath = "package.json";
             
-            var playboxVersion =  await GetActualPlayboxVersion(playboxAcrualRepo.GetRawGitRef());
+            var playboxString =  await GetPackageInfo(playboxAcrualRepo.GetRawGitRef());
             
-            playbox_actual_version = playboxVersion;
+            var packageData = JObject.Parse(playboxString);
+            
+            playbox_actual_version = packageData?["version"]?.ToString();
 
-            var packageVersion = LockedRepositoryHelper.GetDependencyVersion("playbox");
+            var packageVersion = LockedRepositoryHelper.GetDependencyVersion(new List<string>()
+            {
+                packageData?["name"]?.Value<string>()
+            });
 
             GitDependentiesLink playboxCurrentRepo = new GitDependentiesLink();
             playboxCurrentRepo.isHashedLock = true;
-            playboxCurrentRepo.gitCommitHash = packageVersion.hash;
+            playboxCurrentRepo.gitCommitHash = packageVersion[0].hash;
             playboxCurrentRepo.gitProjectName = "playbox-sdk";
             playboxCurrentRepo.gitOrganization = "playbox-technologies";
             playboxCurrentRepo.gitFilePath = "package.json";
             
-            playbox_current_version = await GetActualPlayboxVersion(playboxCurrentRepo.GetRawGitRef());
+            var playboxCurrentData = await GetPackageInfo(playboxCurrentRepo.GetRawGitRef());
+            
+            var packageCurrentData = JObject.Parse(playboxCurrentData);
+            
+            playbox_current_version = packageCurrentData?["version"]?.Value<string>();
         }
 
         private void OnGUI()
@@ -65,14 +79,12 @@ namespace Editor.PlayboxInstaller.PackageManager
             });
         }
 
-        private async Task<string> GetActualPlayboxVersion(string url = "")
+        private async Task<string> GetPackageInfo(string url = "")
         {
             var res = await HttpHelper.GetAsync(
                 url);
-
-            var packageJson = JObject.Parse(res.Body);
             
-            return packageJson["version"]?.ToString();
+            return res.Body;
         }
     }
 }

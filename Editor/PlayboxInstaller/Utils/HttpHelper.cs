@@ -2,6 +2,7 @@
 
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,10 @@ namespace PlayboxInstaller
             _client = new HttpClient(handler);
             
             _client.DefaultRequestHeaders.Accept.Clear();
+            
+            ProductInfoHeaderValue product = new ProductInfoHeaderValue("Playbox", "1.0");
+            
+            _client.DefaultRequestHeaders.UserAgent.Add(product);
             
         }
 
