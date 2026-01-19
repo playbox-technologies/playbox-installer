@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PlayboxInstaller;
@@ -14,6 +15,8 @@ namespace Editor.PlayboxInstaller.PackageManager
     {
         private string playbox_actual_version = "0.0.1";
         private string playbox_current_version = "0.0.1";
+
+        private string publicPackages = "";
         
         
         [MenuItem("Playbox/Installer/Package Manager")]
@@ -26,7 +29,12 @@ namespace Editor.PlayboxInstaller.PackageManager
         {
             var str = await GetPackageInfo("https://api.github.com/orgs/playbox-technologies/repos?type=public&sort=updated&direction=desc&per_page=100&page=1");
             
-            Debug.Log(str);
+            var json = JArray.Parse(str);
+
+            foreach (var item in json)
+            {
+                publicPackages += (item?["name"]?.Value<string>()) + $"\t {item?["description"]?.Value<string>()}" + "\n";
+            }
             
             GitDependentiesLink playboxAcrualRepo = new GitDependentiesLink();
             playboxAcrualRepo.isHashedLock = false;
@@ -77,6 +85,9 @@ namespace Editor.PlayboxInstaller.PackageManager
                     Debug.Log("Installing Playbox");
                 }
             });
+            
+            GUILayout.Space(20);
+            GUILayout.Label(publicPackages);
         }
 
         private async Task<string> GetPackageInfo(string url = "")
