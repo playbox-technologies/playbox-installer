@@ -30,6 +30,8 @@ namespace PlayboxInstaller
             
             _client.DefaultRequestHeaders.UserAgent.Add(product);
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.raw"));
+            _client.DefaultRequestHeaders.Authorization = 
+                new AuthenticationHeaderValue("Bearer", "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");// for reading public repositories
             
         }
 

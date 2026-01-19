@@ -34,6 +34,15 @@ namespace Editor.PlayboxInstaller.PackageManager
 
         private void OnGUI()
         {
+            if (PlayboxPackageRegister.DependentiesLinks.Count == 0)
+            {
+                PlayboxLayout.VerticalLayout(() =>
+                {
+                    GUILayout.Label("Updating Playbox Repositories ...");
+                    
+                });   
+            }
+            
             foreach (var dependentiesLink in PlayboxPackageRegister.DependentiesLinks)
             {
                 PlayboxLayout.HorizontalLayout(() =>
