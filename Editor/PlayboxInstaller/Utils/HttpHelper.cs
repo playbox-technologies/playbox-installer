@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace PlayboxInstaller
@@ -28,9 +29,14 @@ namespace PlayboxInstaller
             
             _client.DefaultRequestHeaders.UserAgent.Add(product);
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.raw"));
-            
-            _client.DefaultRequestHeaders.Authorization = 
-                new AuthenticationHeaderValue("Bearer", "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");
+
+            if (EditorPrefs.HasKey("GithubToken"))
+            {
+                var token = EditorPrefs.GetString("GithubToken");
+                
+                _client.DefaultRequestHeaders.Authorization = 
+                    new AuthenticationHeaderValue("Bearer", token);   
+            }
         }
 
         public static Task<HttpResult> GetAsync(string url, CancellationToken ct = default)
