@@ -19,12 +19,14 @@ namespace Editor.PlayboxInstaller.PackageManager
 
         public static async void Register()
         {
-            try
-            {
                 _dependentiesLinks.Clear();
+
+                var result = await HttpHelper.GetAsync("https://api.github.com/orgs/playbox-technologies/repos?type=public");
+                
+                string repositories = result.Body;
             
-                string repositories = await HttpGET("https://api.github.com/orgs/playbox-technologies/repos?type=public");
-            
+                Debug.Log(repositories);
+                
                 if (string.IsNullOrEmpty(repositories))
                     return;
             
@@ -56,11 +58,7 @@ namespace Editor.PlayboxInstaller.PackageManager
                     if(!_dependentiesLinks.Contains(dependentiesLink))
                         _dependentiesLinks.Add(dependentiesLink);
                 }
-            }
-            catch (Exception e)
-            {
-                throw; // TODO handle exception
-            }
+            
         }
 
         private static async Task<string> HttpGET(string url) => (await HttpHelper.GetAsync(url)).Body;
