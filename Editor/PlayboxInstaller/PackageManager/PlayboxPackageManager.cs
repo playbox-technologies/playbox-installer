@@ -1,8 +1,6 @@
 ﻿#if UNITY_EDITOR
 
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using PlayboxInstaller;
 using UnityEditor;
 using UnityEngine;
@@ -38,7 +36,7 @@ namespace Editor.PlayboxInstaller.PackageManager
                 PlayboxLayout.VerticalLayout(() =>
                 {
                     DateTime time = PlayboxPackageRegister.LastUpdate;
-                    DateTime nextTime = time.AddMinutes(5);
+                    DateTime nextTime = time.AddMinutes(PlayboxPackageRegister.UpdateRateInMinutes);
 
                     PlayboxLayout.HorizontalLayout(() =>
                     {
@@ -71,14 +69,6 @@ namespace Editor.PlayboxInstaller.PackageManager
                 
                 GUILayout.Space(10);
             }
-        }
-
-        private static async Task<string> HttpGET(string url = "")
-        {
-            var res = await HttpHelper.GetAsync(
-                url);
-            
-            return res.Body;
         }
     }
 }

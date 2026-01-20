@@ -1,6 +1,7 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using PlayboxInstaller;
 using Unity.Plastic.Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace Editor.PlayboxInstaller.PackageManager
         private const string PLAYBOX_KEY = "PLAYBOX_KEY";
         
         private static DateTime _lastUpdate = DateTime.UtcNow;
+        private const int _updateRateInMinutes = 5;
 
         public static List<GitDependentiesLink> DependentiesLinks
         {
@@ -24,6 +26,8 @@ namespace Editor.PlayboxInstaller.PackageManager
         {
             get => _lastUpdate;
         }
+
+        public static int UpdateRateInMinutes => _updateRateInMinutes;
 
         public static async void Register()
         {
@@ -42,7 +46,7 @@ namespace Editor.PlayboxInstaller.PackageManager
                     repositories = result.Body;
                     
                     PlayboxMemoryCache.Push(
-                        new KeyValuePair<string, PlayboxCacheElement>(PLAYBOX_KEY, new PlayboxCacheElement(repositories, 5)));
+                        new KeyValuePair<string, PlayboxCacheElement>(PLAYBOX_KEY, new PlayboxCacheElement(repositories, UpdateRateInMinutes)));
 
                     _lastUpdate = PlayboxMemoryCache.Get(PLAYBOX_KEY).LastUpdate;
                 }
@@ -106,7 +110,7 @@ namespace Editor.PlayboxInstaller.PackageManager
             PlayboxMemoryCache.Clear();
             Register();
         }
-
-        private static async Task<string> HttpGET(string url) => (await HttpHelper.GetAsync(url)).Body;
     }
 }
+
+#endif
