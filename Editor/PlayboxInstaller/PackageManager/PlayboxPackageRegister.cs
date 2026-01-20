@@ -10,21 +10,43 @@ namespace Editor.PlayboxInstaller.PackageManager
     public static class PlayboxPackageRegister
     {
         private static List<GitDependentiesLink> _dependentiesLinks = new();
+        
+        private const string PLAYBOX_KEY = "PLAYBOX_KEY";
+        
+        private static DateTime _lastUpdate = DateTime.UtcNow;
 
         public static List<GitDependentiesLink> DependentiesLinks
         {
             get => _dependentiesLinks;
-            set => _dependentiesLinks = value;
+        }
+
+        public static DateTime LastUpdate
+        {
+            get => _lastUpdate;
         }
 
         public static async void Register()
         {
                 _dependentiesLinks.Clear();
 
-                var result = await HttpHelper.GetAsync("https://api.github.com/orgs/playbox-technologies/repos?type=public");
+                string repositories;
                 
-                string repositories = result.Body;
-            
+                if (PlayboxMemoryCache.Exists(PLAYBOX_KEY))
+                {
+                    repositories = (string)PlayboxMemoryCache.Get(PLAYBOX_KEY).Element;
+                }
+                else
+                {
+                    var result = await HttpHelper.GetAsync("https://api.github.com/orgs/playbox-technologies/repos?type=public");  
+                    
+                    repositories = result.Body;
+                    
+                    PlayboxMemoryCache.Push(
+                        new KeyValuePair<string, PlayboxCacheElement>(PLAYBOX_KEY, new PlayboxCacheElement(repositories, 5)));
+
+                    _lastUpdate = PlayboxMemoryCache.Get(PLAYBOX_KEY).LastUpdate;
+                }
+                
                 Debug.Log(repositories);
                 
                 if (string.IsNullOrEmpty(repositories))
@@ -43,7 +65,26 @@ namespace Editor.PlayboxInstaller.PackageManager
 
                     string branchesURL = dependentiesLink.GetBranchesURL();
 
-                    var branchesBody = JArray.Parse(await HttpGET(branchesURL));
+                    string brachBodyString;
+
+                    string projectName = dependentiesLink.gitProjectName;
+                    
+                    if (PlayboxMemoryCache.Exists(projectName))
+                    {
+                        brachBodyString = (string)PlayboxMemoryCache.Get(projectName).Element;
+                    }
+                    else
+                    {
+                        var result = await HttpHelper.GetAsync(branchesURL);  
+                    
+                        brachBodyString = result.Body;
+                    
+                        PlayboxMemoryCache.Push(
+                            new KeyValuePair<string, PlayboxCacheElement>(projectName, new PlayboxCacheElement(brachBodyString, 2)));
+                        
+                    }
+
+                    var branchesBody = JArray.Parse(brachBodyString);
 
                     foreach (var branch in branchesBody)
                     {
@@ -58,7 +99,12 @@ namespace Editor.PlayboxInstaller.PackageManager
                     if(!_dependentiesLinks.Contains(dependentiesLink))
                         _dependentiesLinks.Add(dependentiesLink);
                 }
-            
+        }
+
+        public static void UpdateNow()
+        {
+            PlayboxMemoryCache.Clear();
+            Register();
         }
 
         private static async Task<string> HttpGET(string url) => (await HttpHelper.GetAsync(url)).Body;

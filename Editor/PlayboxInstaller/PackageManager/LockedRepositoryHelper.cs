@@ -8,7 +8,7 @@ using UnityEngine;
 namespace PlayboxInstaller
 {
     [Serializable]
-    public class PackageInfo
+    public class PlayboxPackageInfo
     {
         public enum RepositoryType
         {
@@ -55,11 +55,11 @@ namespace PlayboxInstaller
             }
         }
 
-        private static PackageInfo GetPackageInfo(string packageName, in JObject dependencies)
+        private static PlayboxPackageInfo GetPackageInfo(string packageName, in JObject dependencies)
         {
-            PackageInfo repository = new PackageInfo();
+            PlayboxPackageInfo repository = new PlayboxPackageInfo();
 
-            repository.repositoryType = PackageInfo.RepositoryType.Registry;
+            repository.repositoryType = PlayboxPackageInfo.RepositoryType.Registry;
 
             if (!dependencies.TryGetValue(packageName, out var dependency))
             {
@@ -76,7 +76,7 @@ namespace PlayboxInstaller
             {
                 repository.hash = package?["hash"]?.Value<string>();
 
-                repository.repositoryType = PackageInfo.RepositoryType.Git;
+                repository.repositoryType = PlayboxPackageInfo.RepositoryType.Git;
             }
             
             
@@ -84,11 +84,11 @@ namespace PlayboxInstaller
             return repository;
         }
 
-        public static List<PackageInfo> GetDependencyVersion(List<string> packageList)
+        public static List<PlayboxPackageInfo> GetDependencyVersion(List<string> packageList)
         {
             GetLockedFile();
 
-            List<PackageInfo> packageInfos = new List<PackageInfo>();
+            List<PlayboxPackageInfo> packageInfos = new List<PlayboxPackageInfo>();
             
             foreach (var package in packageList)
             {

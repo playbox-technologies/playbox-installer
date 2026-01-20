@@ -14,8 +14,6 @@ namespace PlayboxInstaller
     {
         private static HttpClient _client;
 
-        private static string _baseUrl = "";
-
         private static void InitService()
         {
             var handler = new HttpClientHandler
@@ -30,6 +28,9 @@ namespace PlayboxInstaller
             
             _client.DefaultRequestHeaders.UserAgent.Add(product);
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.raw"));
+            
+            _client.DefaultRequestHeaders.Authorization = 
+                new AuthenticationHeaderValue("Bearer", "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");
         }
 
         public static Task<HttpResult> GetAsync(string url, CancellationToken ct = default)

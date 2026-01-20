@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlayboxInstaller;
@@ -10,16 +11,6 @@ namespace Editor.PlayboxInstaller.PackageManager
 {
     public class PlayboxPackageManager : EditorWindow
     {
-        private string playbox_actual_version = "0.0.1";
-        private string playbox_current_version = "0.0.1";
-
-        private string _playboxOrganization = "playbox-technologies";
-
-        private string publicPackages = "";
-        
-        private List<string> playboxBranches = new();
-        
-        
         [MenuItem("Playbox/Installer/Package Manager")]
         private static void UnpackArhivesMenu()
         {
@@ -41,6 +32,25 @@ namespace Editor.PlayboxInstaller.PackageManager
                     GUILayout.Label("Updating Playbox Repositories ...");
                     
                 });   
+            }
+            else
+            {
+                PlayboxLayout.VerticalLayout(() =>
+                {
+                    DateTime time = PlayboxPackageRegister.LastUpdate;
+                    DateTime nextTime = time.AddMinutes(5);
+
+                    PlayboxLayout.HorizontalLayout(() =>
+                    {
+                        GUILayout.Label($"Last Update : {time.Hour:00}:{time.Minute:00}");
+                        GUILayout.Label($"Next Update : {nextTime.Hour:00}:{nextTime.Minute:00}");
+
+                        if (GUILayout.Button("Update Now"))
+                        {
+                            PlayboxPackageRegister.UpdateNow();
+                        }
+                    });
+                }); 
             }
             
             foreach (var dependentiesLink in PlayboxPackageRegister.DependentiesLinks)
