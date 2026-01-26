@@ -3,6 +3,7 @@
 using System;
 using PlayboxInstaller;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace Editor.PlayboxInstaller.PackageManager
@@ -65,6 +66,9 @@ namespace Editor.PlayboxInstaller.PackageManager
                     if (GUILayout.Button("Install"))
                     {
                         Debug.Log($"Installing {dependentiesLink.GetPackageGitRef()}");
+
+                        Client.Add(dependentiesLink.GetPackageGitRef());
+                        Client.Resolve();
                     }
                 });
                 

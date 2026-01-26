@@ -51,11 +51,11 @@ namespace Editor.PlayboxInstaller.PackageManager
             {
                 if (!string.IsNullOrEmpty(gitOrganization))
                 {
-                    return $"{gitHttpLink}/{gitOrganization}/{gitProjectName}/refs/heads/{GetBranch(currentBranch)}.git";
+                    return $"{gitHttpLink}/{gitOrganization}/{gitProjectName}.git#{GetBranch(currentBranch)}";
                 }
                 else
                 {
-                    return $"{gitHttpLink}/{gitProjectName}/{gitCommitHash}/refs/heads/{GetBranch(currentBranch)}.git";
+                    return $"{gitHttpLink}/{gitProjectName}/{gitCommitHash}.git#{GetBranch(currentBranch)}";
                 }
             }
 
