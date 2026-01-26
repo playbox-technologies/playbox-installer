@@ -18,6 +18,7 @@ namespace Editor.PlayboxInstaller.PackageManager
 
         private void CreateGUI()
         {
+            PlayboxPackageRegister.Initialize();
             PlayboxPackageRegister.Register();
         }
 
@@ -63,7 +64,7 @@ namespace Editor.PlayboxInstaller.PackageManager
                     
                     if (GUILayout.Button("Install"))
                     {
-                        Debug.Log($"Installing {dependentiesLink.gitProjectName}");
+                        Debug.Log($"Installing {dependentiesLink.GetPackageGitRef()}");
                     }
                 });
                 

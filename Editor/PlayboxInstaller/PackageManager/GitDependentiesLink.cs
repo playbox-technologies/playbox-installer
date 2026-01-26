@@ -9,6 +9,7 @@ namespace Editor.PlayboxInstaller.PackageManager
         {
             public string gitRawRef = "https://raw.githubusercontent.com";
             public string gitApiRef = "https://api.github.com";
+            public string gitHttpLink = "https://github.com";
             public string gitProjectName = "";
             public string gitOrganization = "";
             public string gitCommitHash = "";
@@ -43,6 +44,18 @@ namespace Editor.PlayboxInstaller.PackageManager
                     {
                         return $"{gitRawRef}/{gitProjectName}/{gitCommitHash}/refs/heads/{GetBranch(currentBranch)}/{gitFilePath}";
                     }
+                }
+            }
+            
+            public string GetPackageGitRef()
+            {
+                if (!string.IsNullOrEmpty(gitOrganization))
+                {
+                    return $"{gitHttpLink}/{gitOrganization}/{gitProjectName}/refs/heads/{GetBranch(currentBranch)}.git";
+                }
+                else
+                {
+                    return $"{gitHttpLink}/{gitProjectName}/{gitCommitHash}/refs/heads/{GetBranch(currentBranch)}.git";
                 }
             }
 
