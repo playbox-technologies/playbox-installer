@@ -65,8 +65,6 @@ namespace Editor.PlayboxInstaller.PackageManager
                     
                     if (GUILayout.Button("Install"))
                     {
-                        Debug.Log($"Installing {dependentiesLink.GetPackageGitRef()}");
-
                         Client.Add(dependentiesLink.GetPackageGitRef());
                         Client.Resolve();
                     }
