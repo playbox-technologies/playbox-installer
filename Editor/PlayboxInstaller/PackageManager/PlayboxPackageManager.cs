@@ -10,7 +10,7 @@ namespace Editor.PlayboxInstaller.PackageManager
 {
     public class PlayboxPackageManager : EditorWindow
     {
-        [MenuItem("Playbox/Installer/Package Manager")]
+        [MenuItem("Playbox/Installer/Package Manager(Beta)")]
         private static void UnpackArhivesMenu()
         {
             GetWindow<PlayboxPackageManager>("Playbox Package Manager");
