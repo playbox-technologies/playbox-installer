@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using PlayboxInstaller;
-using Unity.Plastic.Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace Editor.PlayboxInstaller.PackageManager
